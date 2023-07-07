@@ -10,25 +10,25 @@ Need to install below .NETStandard,Version=2.0 supprting APM nuget.
 ```
 Relativity.Telemetry.APM   Version="2019"
 ```
-### Dependency Registration
+#### Dependency Registration
 ```
 services.AddTransient<IConversionApmClient, Review.Shared.ConversionApmClient>();
 ```
-### Startup Configuration
+#### Startup Configuration
 ```
 services.AddSingleton<IAPM>(x => new Instrumentation(_configuration).APM);
 services.AddOpenTelemetry(_configuration.GetSection(RuntimeConfiguration.Position).Get<RuntimeConfiguration>());
 ```
-### Instrumentation Class
+#### Instrumentation Class
 Instrumentation class contains the k8s and EventHub configuration.
-#### K8s Configuration
+##### K8s Configuration
 ```
 var customData = new ConcurrentDictionary<string, object>();
 		 customData.TryAdd("k8s.cluster.name", _configuration.GetValue<string>("K8S_CLUSTER_NAME"));
 		 customData.TryAdd("k8s.pod.name", Environment.MachineName);
 		 customData.TryAdd("service.version", ServiceConfiguration.ASSEMBLY_VERSION);
 ```
-#### EventHubConfig
+##### EventHubConfig
 ```
 ar config = new EventHubConfig(
 		eventHubServiceNamespace: () => _configuration.GetValue<string>("R1_REGION_APM_NAMESPACE"),
@@ -37,7 +37,7 @@ ar config = new EventHubConfig(
 		eventHubSharedAccessKey: () => _configuration.GetValue<string>("R1_REGION_APM_KEY"));
 ```
 
-### ObservabilityMiddleware
+#### ObservabilityMiddleware
 ObservabilityMiddleware is a middleware which provides the OpenTelemetry resources, metrics and tracing.
 ```
 services.AddHostedService<OpenTelemetryEventListener>();
@@ -46,7 +46,7 @@ services.AddHostedService<OpenTelemetryEventListener>();
 	 otelBuilder.AddOpenTelemetryMetrics(configuration);
 	 otelBuilder.AddOpenTelemetryTracing(configuration);
 ```
-### Constructor Injection
+#### Constructor Injection
 ```
 public DocumentManager(IConversionApmClient apmClient)
 {
