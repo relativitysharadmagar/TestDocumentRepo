@@ -29,6 +29,8 @@ public DocumentManager(IConversionApmClient apmClient)
 ### Calling APM Methods
 ```
 _apmClient.ReportTimeToApm(PerformanceKeys.DVS_DOCUMENT_MANAGER_HANDLE_TIME, stopwatch.ElapsedMilliseconds, metrics);
+_apmClient.LogDocToDocCacheHitMetric(batchRequest, false);
+_apmClient.ReportErrorToApm(ErrorType.LongAuditInsert, Guid.Empty, Guid.NewGuid(), ex, batchRequest.WorkspaceId);
 ```
 ### How APM Works
 The APM Framework consists of two basic operations: collecting metrics of interest and sending them on to their destination.
