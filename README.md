@@ -19,6 +19,33 @@ services.AddTransient<IConversionApmClient, Review.Shared.ConversionApmClient>()
 services.AddSingleton<IAPM>(x => new Instrumentation(_configuration).APM);
 services.AddOpenTelemetry(_configuration.GetSection(RuntimeConfiguration.Position).Get<RuntimeConfiguration>());
 ```
+### Instrumentation Class
+Instrumentation class contains the k8s and EventHub configuration.
+#### K8s Configuration
+```
+var customData = new ConcurrentDictionary<string, object>();
+		 customData.TryAdd("k8s.cluster.name", _configuration.GetValue<string>("K8S_CLUSTER_NAME"));
+		 customData.TryAdd("k8s.pod.name", Environment.MachineName);
+		 customData.TryAdd("service.version", ServiceConfiguration.ASSEMBLY_VERSION);
+```
+#### EventHubConfig
+```
+ar config = new EventHubConfig(
+		eventHubServiceNamespace: () => _configuration.GetValue<string>("R1_REGION_APM_NAMESPACE"),
+		eventHubName: () => _configuration.GetValue<string>("R1_REGION_APM_NAME"),
+		eventHubSharedAccessKeyName: () => _configuration.GetValue<string>("R1_REGION_APM_KEYNAME"),
+		eventHubSharedAccessKey: () => _configuration.GetValue<string>("R1_REGION_APM_KEY"));
+```
+
+### ObservabilityMiddleware
+ObservabilityMiddleware is a middleware which provides the OpenTelemetry resources, metrics and tracing.
+```
+services.AddHostedService<OpenTelemetryEventListener>();
+	 OpenTelemetryBuilder otelBuilder = services.AddOpenTelemetry();
+	 otelBuilder.AddOpenTelemetryResource(configuration);
+	 otelBuilder.AddOpenTelemetryMetrics(configuration);
+	 otelBuilder.AddOpenTelemetryTracing(configuration);
+```
 ### Constructor Injection
 ```
 public DocumentManager(IConversionApmClient apmClient)
