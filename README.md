@@ -1,11 +1,11 @@
-##  APM Overview
+##  APM Logging: Document Review Service
 Creates Application Performance Monitoring (APM) related objects.
 To monitor Conversion Cache Manager operations in Relativity One. At this time APM Metrics are being introduced to monitor job creation, discovery, and deleting files.
 
-## Registered Services
+### Registered Services
 ConversionApmClient
 
-## Configurator
+### Configurator
 Need to install below .NETStandard,Version=2.0 supprting APM nuget.
 ```
 Relativity.Telemetry.APM   Version="2019"
@@ -30,36 +30,36 @@ public DocumentManager(IConversionApmClient apmClient)
 ```
 _apmClient.ReportTimeToApm(PerformanceKeys.DVS_DOCUMENT_MANAGER_HANDLE_TIME, stopwatch.ElapsedMilliseconds, metrics);
 ```
-## How APM Works
+### How APM Works
 The APM Framework consists of two basic operations: collecting metrics of interest and sending them on to their destination.
 
-## The Measures
+### The Measures
 There are 5 basic measure types available in the new APM framework that cover most use cases for capturing telemetry and APM information at the application level.  The APM library provides five types of measures that can be recorded (see Metric Types for a more detailed overview).
 
-### Meters
+#### Meters
  Records the rate at which an event occurs
 
-### Health Check
+#### Health Check
 Measure the health of a system
 
-### Timers
+#### Timers
 Keeps a histogram of the duration of a type of event
 
-### Counters
+#### Counters
 Counters are 64 bit integers that can be incremented or decremented to count the occurrences of an event or value
 
-### Gauges
+#### Gauges
 Instantaneous values (there is also a variation that allows for capturing gauge values at timed intervals)
 
 Metrics can be created and registered using the methods available on the APM class, which is available in the Telemetry namespace. Creating an APM Client allows for developers to retrieve any of the measures that make sense for the type of information to be captured. The individual measures then forward their collected values to one or more sinks (destinations) for further processing and visualization (graphing & alerting). At the current time, the APM framework supports multiple sinks for receiving generated metrics. The default sink for both RelativityOne and On Premise solutions is the Relativity ServiceBus. This allows metrics to be sent to a remote processing solution where graphing ,alerting, and further processing can occur without effecting the running instance of Relativity.
 
-## New Relic Query Verification
-### Guage
+### New Relic Query Verification
+#### Guage
 ```
 SELECT * FROM Gauge WHERE Name = 'DocumentReview' and CustomData_id = 'd851f0b3-a877-b4db-2474-9717a63d69g6' since 15 minutes ago
 ```
 
-### Timer
+#### Timer
 ```
 SELECT * from Timer where Name = 'DVS.DocumentManagerHandleTime' and CustomData_viewerContentKeyRequestPriority = 'OnTheFly' and CustomData_MaaSEnvironmentType = 'regression' since 5 minutes ago
 ```
