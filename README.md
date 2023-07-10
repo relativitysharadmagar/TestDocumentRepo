@@ -25,25 +25,48 @@ services.AddOpenTelemetry(_configuration.GetSection(RuntimeConfiguration.Positio
 Instrumentation class contains the k8s and EventHub configuration.
 ##### K8s Configuration
 Read the config value K8S_CLUSTER_NAME from the appsettings.Development.json file.
+
 Code Snippet: Instrumentation.cs
 ```
 var customData = new ConcurrentDictionary<string, object>();
-		 customData.TryAdd("k8s.cluster.name", _configuration.GetValue<string>("xxxxxxxxx"));
+		 customData.TryAdd("k8s.cluster.name", _configuration.GetValue<string>("K8S_CLUSTER_NAME"));
 		 customData.TryAdd("k8s.pod.name", Environment.MachineName);
 		 customData.TryAdd("service.version", ServiceConfiguration.ASSEMBLY_VERSION);
 ```
-##### EventHubConfig
+Code Snippet: appsettings.Development.json
+```
+{
+    "Runtime": {
+		"OTEL_EXPORTER_OTLP_ENDPOINT": "xxxxxxx",
+		"CID_AUTHORITY_URI": "https://xxxxxxxxxxxxx/",
+		"K8S_CLUSTER_NAME": "xxxxxx",
+		"SAMPLING_RATE": 0.0,
+		"K8S_REGION_NAME": "xxx",
+		"ENABLE_XHOST_OVERRIDE_HEADER":  true
+	       }
+}
+```
+##### EventHubConfig Configuration
 Read the below config value from the secrets.json file.
 Code Snippet: Instrumentation.cs
 ```
 ar config = new EventHubConfig(
-		eventHubServiceNamespace: () => _configuration.GetValue<string>("xxxx-xxx-xxx-xxx"),
-		eventHubName: () => _configuration.GetValue<string>("xxxx-xxxxx-xxx-xxx"),
-		eventHubSharedAccessKeyName: () => _configuration.GetValue<string>("xxxxxxx"),
-		eventHubSharedAccessKey: () => _configuration.GetValue<string>("xxxxxxxxxxxxxxxxxxxxxxxx"));
+		eventHubServiceNamespace: () => _configuration.GetValue<string>("R1_REGION_APM_NAMESPACE"),
+		eventHubName: () => _configuration.GetValue<string>("R1_REGION_APM_NAME"),
+		eventHubSharedAccessKeyName: () => _configuration.GetValue<string>("R1_REGION_APM_KEYNAME"),
+		eventHubSharedAccessKey: () => _configuration.GetValue<string>("R1_REGION_APM_KEY"));
+```
+Code Snippet: secrets.json
+```
+{
+  "Runtime:R1_REGION_APM_NAME": "xxxx-xxxxxx-xxx-xxx",
+  "Runtime:R1_REGION_APM_KEYNAME": "xxxxxxxx",
+  "Runtime:R1_REGION_APM_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "Runtime:R1_REGION_APM_NAMESPACE": "xxx-xx-xxx-xxx"
+}
 ```
 
-#### ObservabilityMiddleware
+#### ObservabilityMiddleware Configuration
 ObservabilityMiddleware is a middleware which provides the OpenTelemetry resources, metrics and tracing.
 
 Code Snippet: ObservabilityMiddleware.cs
@@ -94,13 +117,16 @@ Metrics can be created and registered using the methods available on the APM cla
 
 ### New Relic Query Verification
 #### Guage
-Pass the guage name and custom data id for the mentioned guage service and pod.
+Pass the guage name and custom data id for the mentioned guage service and pod in the NewRelic Query.
 ```
 SELECT * FROM Gauge WHERE Name = 'DocumentReview' and CustomData_id = 'xxxx-xxxx-xxxx-xxxx-xxxxxxxx' since 15 minutes ago
 ```
-
+Code Snippet: NewRelic Query to retrieve the custom data id.
+```
+SELECT COUNT(1) as Count,Timestamp,CorrelationId,CustomData_id,CustomData_MaaSMessageProcessedTime,CustomData_state,SourceName,Timestamp  FROM Counter WHERE Name='em_job_state_change_total' FACET SourceName
+```
 #### Timer
-Pass the timer name for your manager and conetent key request priority.
+Pass the timer name for your manager and conetent key request priority to the NewRelic Query.
 ```
 SELECT * from Timer where Name = 'YOUR_MANAGER_HANDLE_TIME_NAME' and CustomData_viewerContentKeyRequestPriority = 'PRIORITY_NAME' and CustomData_MaaSEnvironmentType = 'ENVIRONMENT_NAME' since 5 minutes ago
 ```
