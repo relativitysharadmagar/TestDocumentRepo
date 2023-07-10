@@ -94,13 +94,13 @@ Metrics can be created and registered using the methods available on the APM cla
 
 ### New Relic Query Verification
 #### Guage
-Pass the guage name and custom data id for the mentioned guage service.
+Pass the guage name and custom data id for the mentioned guage service and pod.
 ```
 SELECT * FROM Gauge WHERE Name = 'DocumentReview' and CustomData_id = 'xxxx-xxxx-xxxx-xxxx-xxxxxxxx' since 15 minutes ago
 ```
 
 #### Timer
-Pass the timer name and conetent key request priority.
+Pass the timer name for your manager and conetent key request priority.
 ```
 SELECT * from Timer where Name = 'YOUR_MANAGER_HANDLE_TIME_NAME' and CustomData_viewerContentKeyRequestPriority = 'PRIORITY_NAME' and CustomData_MaaSEnvironmentType = 'ENVIRONMENT_NAME' since 5 minutes ago
 ```
