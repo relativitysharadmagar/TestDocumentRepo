@@ -11,10 +11,12 @@ Need to install below .NETStandard,Version=2.0 supprting APM nuget.
 Relativity.Telemetry.APM   Version="2019"
 ```
 #### Dependency Registration
+Code Snippet: ServiceInstaller.cs
 ```
 services.AddTransient<IConversionApmClient, Review.Shared.ConversionApmClient>();
 ```
 #### Startup Configuration
+Code Snippet: Startup.cs
 ```
 services.AddSingleton<IAPM>(x => new Instrumentation(_configuration).APM);
 services.AddOpenTelemetry(_configuration.GetSection(RuntimeConfiguration.Position).Get<RuntimeConfiguration>());
@@ -22,6 +24,7 @@ services.AddOpenTelemetry(_configuration.GetSection(RuntimeConfiguration.Positio
 #### Instrumentation Class
 Instrumentation class contains the k8s and EventHub configuration.
 ##### K8s Configuration
+Code Snippet: Instrumentation.cs
 ```
 var customData = new ConcurrentDictionary<string, object>();
 		 customData.TryAdd("k8s.cluster.name", _configuration.GetValue<string>("K8S_CLUSTER_NAME"));
@@ -29,6 +32,7 @@ var customData = new ConcurrentDictionary<string, object>();
 		 customData.TryAdd("service.version", ServiceConfiguration.ASSEMBLY_VERSION);
 ```
 ##### EventHubConfig
+Code Snippet: Instrumentation.cs
 ```
 ar config = new EventHubConfig(
 		eventHubServiceNamespace: () => _configuration.GetValue<string>("R1_REGION_APM_NAMESPACE"),
@@ -39,6 +43,8 @@ ar config = new EventHubConfig(
 
 #### ObservabilityMiddleware
 ObservabilityMiddleware is a middleware which provides the OpenTelemetry resources, metrics and tracing.
+
+Code Snippet: ObservabilityMiddleware.cs
 ```
 services.AddHostedService<OpenTelemetryEventListener>();
 	 OpenTelemetryBuilder otelBuilder = services.AddOpenTelemetry();
@@ -47,6 +53,7 @@ services.AddHostedService<OpenTelemetryEventListener>();
 	 otelBuilder.AddOpenTelemetryTracing(configuration);
 ```
 #### Constructor Injection
+Code Snippet: DocumentManager.cs
 ```
 public DocumentManager(IConversionApmClient apmClient)
 {
@@ -54,6 +61,7 @@ public DocumentManager(IConversionApmClient apmClient)
 }
 ```
 ### Calling APM Methods
+Code Snippet: DocumentManager.cs
 ```
 _apmClient.ReportTimeToApm(PerformanceKeys.DVS_DOCUMENT_MANAGER_HANDLE_TIME, stopwatch.ElapsedMilliseconds, metrics);
 _apmClient.LogDocToDocCacheHitMetric(batchRequest, false);
