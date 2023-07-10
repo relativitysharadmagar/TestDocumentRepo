@@ -24,21 +24,23 @@ services.AddOpenTelemetry(_configuration.GetSection(RuntimeConfiguration.Positio
 #### Instrumentation Class
 Instrumentation class contains the k8s and EventHub configuration.
 ##### K8s Configuration
+Read the config value K8S_CLUSTER_NAME from the appsettings.Development.json file.
 Code Snippet: Instrumentation.cs
 ```
 var customData = new ConcurrentDictionary<string, object>();
-		 customData.TryAdd("k8s.cluster.name", _configuration.GetValue<string>("K8S_CLUSTER_NAME"));
+		 customData.TryAdd("k8s.cluster.name", _configuration.GetValue<string>("xxxxxxxxx"));
 		 customData.TryAdd("k8s.pod.name", Environment.MachineName);
 		 customData.TryAdd("service.version", ServiceConfiguration.ASSEMBLY_VERSION);
 ```
 ##### EventHubConfig
+Read the below config value from the secrets.json file.
 Code Snippet: Instrumentation.cs
 ```
 ar config = new EventHubConfig(
-		eventHubServiceNamespace: () => _configuration.GetValue<string>("R1_REGION_APM_NAMESPACE"),
-		eventHubName: () => _configuration.GetValue<string>("R1_REGION_APM_NAME"),
-		eventHubSharedAccessKeyName: () => _configuration.GetValue<string>("R1_REGION_APM_KEYNAME"),
-		eventHubSharedAccessKey: () => _configuration.GetValue<string>("R1_REGION_APM_KEY"));
+		eventHubServiceNamespace: () => _configuration.GetValue<string>("xxxx-xxx-xxx-xxx"),
+		eventHubName: () => _configuration.GetValue<string>("xxxx-xxxxx-xxx-xxx"),
+		eventHubSharedAccessKeyName: () => _configuration.GetValue<string>("xxxxxxx"),
+		eventHubSharedAccessKey: () => _configuration.GetValue<string>("xxxxxxxxxxxxxxxxxxxxxxxx"));
 ```
 
 #### ObservabilityMiddleware
@@ -92,11 +94,13 @@ Metrics can be created and registered using the methods available on the APM cla
 
 ### New Relic Query Verification
 #### Guage
+Pass the guage name and custom data id for the mentioned guage service.
 ```
-SELECT * FROM Gauge WHERE Name = 'DocumentReview' and CustomData_id = 'd851f0b3-a877-b4db-2474-9717a63d69g6' since 15 minutes ago
+SELECT * FROM Gauge WHERE Name = 'DocumentReview' and CustomData_id = 'xxxx-xxxx-xxxx-xxxx-xxxxxxxx' since 15 minutes ago
 ```
 
 #### Timer
+Pass the timer name and conetent key request priority.
 ```
-SELECT * from Timer where Name = 'DVS.DocumentManagerHandleTime' and CustomData_viewerContentKeyRequestPriority = 'OnTheFly' and CustomData_MaaSEnvironmentType = 'regression' since 5 minutes ago
+SELECT * from Timer where Name = 'YOUR_MANAGER_HANDLE_TIME_NAME' and CustomData_viewerContentKeyRequestPriority = 'PRIORITY_NAME' and CustomData_MaaSEnvironmentType = 'ENVIRONMENT_NAME' since 5 minutes ago
 ```
