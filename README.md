@@ -11,15 +11,13 @@ Need to install below .NETStandard,Version=2.0 supprting APM nuget.
 Relativity.Telemetry.APM   Version="2019"
 ```
 #### Dependency Registration
-Code Snippet: ServiceInstaller.cs
-
+Code Snippet: ServiceInstaller.cs  
 Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/IoC/ServicesInstaller.cs
 ```
 services.AddTransient<IConversionApmClient, Review.Shared.ConversionApmClient>();
 ```
 #### Startup Configuration
-Code Snippet: Startup.cs
-
+Code Snippet: Startup.cs  
 Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/Startup.cs
 ```
 services.AddSingleton<IAPM>(x => new Instrumentation(_configuration).APM);
@@ -28,10 +26,8 @@ services.AddOpenTelemetry(_configuration.GetSection(RuntimeConfiguration.Positio
 #### Instrumentation Class
 Instrumentation class contains the k8s and EventHub configuration.
 ##### K8s Configuration
-Read the config value K8S_CLUSTER_NAME from the appsettings.Development.json file.
-
-Code Snippet: Instrumentation.cs
-
+Read the config value K8S_CLUSTER_NAME from the appsettings.Development.json file.  
+Code Snippet: Instrumentation.cs  
 Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/Middleware/Observability/Instrumentation.cs
 ```
 var customData = new ConcurrentDictionary<string, object>();
@@ -39,8 +35,7 @@ var customData = new ConcurrentDictionary<string, object>();
 		 customData.TryAdd("k8s.pod.name", Environment.MachineName);
 		 customData.TryAdd("service.version", ServiceConfiguration.ASSEMBLY_VERSION);
 ```
-Code Snippet: appsettings.Development.json
-
+Code Snippet: appsettings.Development.json  
 Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/appsettings.Development.json
 ```
 {
@@ -56,8 +51,7 @@ Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/rev
 ```
 ##### EventHubConfig Configuration
 Read the below config value from the secrets.json file.
-Code Snippet: Instrumentation.cs
-
+Code Snippet: Instrumentation.cs  
 Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/Middleware/Observability/Instrumentation.cs
 ```
 ar config = new EventHubConfig(
@@ -66,8 +60,7 @@ ar config = new EventHubConfig(
 		eventHubSharedAccessKeyName: () => _configuration.GetValue<string>("R1_REGION_APM_KEYNAME"),
 		eventHubSharedAccessKey: () => _configuration.GetValue<string>("R1_REGION_APM_KEY"));
 ```
-Code Snippet: secrets.json
-
+Code Snippet: secrets.json  
 Source Code: Find your local directory secrets.json file
 ```
 {
@@ -79,10 +72,8 @@ Source Code: Find your local directory secrets.json file
 ```
 
 #### ObservabilityMiddleware Configuration
-ObservabilityMiddleware is a middleware which provides the OpenTelemetry resources, metrics and tracing.
-
-Code Snippet: ObservabilityMiddleware.cs
-
+ObservabilityMiddleware is a middleware which provides the OpenTelemetry resources, metrics and tracing.  
+Code Snippet: ObservabilityMiddleware.cs  
 Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/Middleware/Observability/ObservabilityMiddleware.cs
 ```
 services.AddHostedService<OpenTelemetryEventListener>();
@@ -92,8 +83,7 @@ services.AddHostedService<OpenTelemetryEventListener>();
 	 otelBuilder.AddOpenTelemetryTracing(configuration);
 ```
 #### Constructor Injection
-Code Snippet: DocumentManager.cs
-
+Code Snippet: DocumentManager.cs  
 Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/Relativity.DocumentViewer.Core/Managers/DocumentManager.cs
 ```
 public DocumentManager(IConversionApmClient apmClient)
@@ -102,8 +92,7 @@ public DocumentManager(IConversionApmClient apmClient)
 }
 ```
 ### Calling APM Methods
-Code Snippet: DocumentManager.cs
-
+Code Snippet: DocumentManager.cs  
 Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/Relativity.DocumentViewer.Core/Managers/DocumentManager.cs
 ```
 _apmClient.ReportTimeToApm(PerformanceKeys.DVS_DOCUMENT_MANAGER_HANDLE_TIME, stopwatch.ElapsedMilliseconds, metrics);
