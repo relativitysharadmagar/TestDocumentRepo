@@ -1,8 +1,8 @@
 ##  Using Relativity APM Client: Document Review Service
 Creates Application Performance Monitoring (APM) related objects.
 To continue to report existing APM to match the APM that would have come from Kepler.
-### Usages of IAPMClient
-ConversionApmClient
+### Registered Services
+Usages of IAPMClient
 
 ### Configurator
 Need to install below .NETStandard,Version=2.0 supprting APM nuget.
@@ -116,7 +116,7 @@ Counters are 64 bit integers that can be incremented or decremented to count the
 #### Gauges
 Instantaneous values (there is also a variation that allows for capturing gauge values at timed intervals)
 
-Metrics can be created and registered using the methods available on the APM class, which is available in the Telemetry namespace. Creating an APM Client allows for developers to retrieve any of the measures that make sense for the type of information to be captured. The individual measures then forward their collected values to one or more sinks (destinations) for further processing and visualization (graphing & alerting). At the current time, the APM framework supports multiple sinks for receiving generated metrics. The default sink for both RelativityOne and On Premise solutions is the Relativity ServiceBus. This allows metrics to be sent to a remote processing solution where graphing ,alerting, and further processing can occur without effecting the running instance of Relativity.
+Metrics can be created and registered using the methods available on the APM class, which is available in the Telemetry namespace. Creating an APM Client allows for developers to retrieve any of the measures that make sense for the type of information to be captured. The individual measures then forward their collected values to one or more sinks (destinations) for further processing and visualization (graphing & alerting). At the current time, the APM framework supports multiple sinks for receiving generated metrics. The default sink for both RelativityOne and On Premise solutions is the Relativity ServiceBus. This allows metrics to be sent to a remote processing solution where graphing ,alerting, and further processing can occur without effecting the running instance of Relativity.  
 Once this code has been migrated, we should be able to validate that the same APM that was reported in Kepler is now being reported in the HA service.
 ### New Relic Query Verification
 #### Guage
