@@ -12,11 +12,15 @@ Relativity.Telemetry.APM   Version="2019"
 ```
 #### Dependency Registration
 Code Snippet: ServiceInstaller.cs
+
+Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/IoC/ServicesInstaller.cs
 ```
 services.AddTransient<IConversionApmClient, Review.Shared.ConversionApmClient>();
 ```
 #### Startup Configuration
 Code Snippet: Startup.cs
+
+Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/Startup.cs
 ```
 services.AddSingleton<IAPM>(x => new Instrumentation(_configuration).APM);
 services.AddOpenTelemetry(_configuration.GetSection(RuntimeConfiguration.Position).Get<RuntimeConfiguration>());
@@ -27,6 +31,8 @@ Instrumentation class contains the k8s and EventHub configuration.
 Read the config value K8S_CLUSTER_NAME from the appsettings.Development.json file.
 
 Code Snippet: Instrumentation.cs
+
+Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/Middleware/Observability/Instrumentation.cs
 ```
 var customData = new ConcurrentDictionary<string, object>();
 		 customData.TryAdd("k8s.cluster.name", _configuration.GetValue<string>("K8S_CLUSTER_NAME"));
@@ -34,6 +40,8 @@ var customData = new ConcurrentDictionary<string, object>();
 		 customData.TryAdd("service.version", ServiceConfiguration.ASSEMBLY_VERSION);
 ```
 Code Snippet: appsettings.Development.json
+
+Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/appsettings.Development.json
 ```
 {
     "Runtime": {
@@ -49,6 +57,8 @@ Code Snippet: appsettings.Development.json
 ##### EventHubConfig Configuration
 Read the below config value from the secrets.json file.
 Code Snippet: Instrumentation.cs
+
+Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/Middleware/Observability/Instrumentation.cs
 ```
 ar config = new EventHubConfig(
 		eventHubServiceNamespace: () => _configuration.GetValue<string>("R1_REGION_APM_NAMESPACE"),
@@ -57,6 +67,8 @@ ar config = new EventHubConfig(
 		eventHubSharedAccessKey: () => _configuration.GetValue<string>("R1_REGION_APM_KEY"));
 ```
 Code Snippet: secrets.json
+
+Source Code: Find your local directory secrets.json file
 ```
 {
   "Runtime:R1_REGION_APM_NAME": "xxxx-xxxxxx-xxx-xxx",
@@ -70,6 +82,8 @@ Code Snippet: secrets.json
 ObservabilityMiddleware is a middleware which provides the OpenTelemetry resources, metrics and tracing.
 
 Code Snippet: ObservabilityMiddleware.cs
+
+Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/Middleware/Observability/ObservabilityMiddleware.cs
 ```
 services.AddHostedService<OpenTelemetryEventListener>();
 	 OpenTelemetryBuilder otelBuilder = services.AddOpenTelemetry();
@@ -79,6 +93,8 @@ services.AddHostedService<OpenTelemetryEventListener>();
 ```
 #### Constructor Injection
 Code Snippet: DocumentManager.cs
+
+Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/Relativity.DocumentViewer.Core/Managers/DocumentManager.cs
 ```
 public DocumentManager(IConversionApmClient apmClient)
 {
@@ -87,6 +103,8 @@ public DocumentManager(IConversionApmClient apmClient)
 ```
 ### Calling APM Methods
 Code Snippet: DocumentManager.cs
+
+Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/Relativity.DocumentViewer.Core/Managers/DocumentManager.cs
 ```
 _apmClient.ReportTimeToApm(PerformanceKeys.DVS_DOCUMENT_MANAGER_HANDLE_TIME, stopwatch.ElapsedMilliseconds, metrics);
 _apmClient.LogDocToDocCacheHitMetric(batchRequest, false);
