@@ -5,7 +5,7 @@ To continue to report existing APM to match the APM that would have come from Ke
 Usages of IAPMClient
 
 ### Configurator
-Need to install below .NETStandard,Version=2.0 supprting APM nuget.
+Need to install below .NETStandard,Version=2.0 supporting APM nuget.
 ```
 Relativity.Telemetry.APM   Version="2019"
 ```
