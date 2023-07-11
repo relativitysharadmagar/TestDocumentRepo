@@ -84,7 +84,7 @@ services.AddHostedService<OpenTelemetryEventListener>();
 ```
 #### Constructor Injection
 Code Snippet: DocumentManager.cs  
-Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/Relativity.DocumentViewer.Core/Managers/DocumentManager.cs
+Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/Relativity.DocumentViewer.Core/Managers/DocumentManager.cs  
 ```
 public DocumentManager(IConversionApmClient apmClient)
 {
