@@ -53,7 +53,7 @@ Read the below config value from the secrets.json file.
 Code Snippet: Instrumentation.cs  
 Source Code: https://github.com/relativityone/ReviewService/blob/main/Source/reviewservice/Middleware/Observability/Instrumentation.cs
 ```
-ar config = new EventHubConfig(
+var config = new EventHubConfig(
 		eventHubServiceNamespace: () => _configuration.GetValue<string>("R1_REGION_APM_NAMESPACE"),
 		eventHubName: () => _configuration.GetValue<string>("R1_REGION_APM_NAME"),
 		eventHubSharedAccessKeyName: () => _configuration.GetValue<string>("R1_REGION_APM_KEYNAME"),
