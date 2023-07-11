@@ -1,8 +1,7 @@
-##  APM Logging: Document Review Service
+##  Using Relativity APM Client: Document Review Service
 Creates Application Performance Monitoring (APM) related objects.
-To monitor Conversion Cache Manager operations in Relativity One. At this time APM Metrics are being introduced to monitor job creation, discovery, and deleting files.
-
-### Registered Services
+To continue to report existing APM to match the APM that would have come from Kepler.
+### Usages of IAPMClient
 ConversionApmClient
 
 ### Configurator
@@ -99,9 +98,6 @@ _apmClient.ReportTimeToApm(PerformanceKeys.DVS_DOCUMENT_MANAGER_HANDLE_TIME, sto
 _apmClient.LogDocToDocCacheHitMetric(batchRequest, false);
 _apmClient.ReportErrorToApm(ErrorType.LongAuditInsert, Guid.Empty, Guid.NewGuid(), ex, batchRequest.WorkspaceId);
 ```
-### How APM Works
-The APM Framework consists of two basic operations: collecting metrics of interest and sending them on to their destination.
-
 ### The Measures
 There are 5 basic measure types available in the new APM framework that cover most use cases for capturing telemetry and APM information at the application level.  The APM library provides five types of measures that can be recorded (see Metric Types for a more detailed overview).
 
@@ -121,7 +117,7 @@ Counters are 64 bit integers that can be incremented or decremented to count the
 Instantaneous values (there is also a variation that allows for capturing gauge values at timed intervals)
 
 Metrics can be created and registered using the methods available on the APM class, which is available in the Telemetry namespace. Creating an APM Client allows for developers to retrieve any of the measures that make sense for the type of information to be captured. The individual measures then forward their collected values to one or more sinks (destinations) for further processing and visualization (graphing & alerting). At the current time, the APM framework supports multiple sinks for receiving generated metrics. The default sink for both RelativityOne and On Premise solutions is the Relativity ServiceBus. This allows metrics to be sent to a remote processing solution where graphing ,alerting, and further processing can occur without effecting the running instance of Relativity.
-
+Once this code has been migrated, we should be able to validate that the same APM that was reported in Kepler is now being reported in the HA service.
 ### New Relic Query Verification
 #### Guage
 Pass the guage name and custom data id for the mentioned guage service and pod in the NewRelic Query.
